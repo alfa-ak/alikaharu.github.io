@@ -1,1 +1,3 @@
-firebaseapp hoting : https://web-push-23aa9.firebaseapp.com
+firebaseapp hosting : https://web-push-23aa9.firebaseapp.com
+
+github hosring : https://github.com/alfa-ak/alikaharu.github.io/tree/new-main-branch
