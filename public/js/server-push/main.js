@@ -1,9 +1,9 @@
 var webPush = require('web-push');
 var pushSubscription = {
-    "endpoint": "https://fcm.googleapis.com/fcm/send/d7tgrSBucCA:APA91bFa99mN-DNAcj1aUZ3nPm1536_MgOHFFaz_F9R-mh89PXGChMiRFYeLtkMsEEXgAunrm6dWnlvGWPwhe_dRf4OVGvfDmELX_4dYEoIJkNKNCsp7pyhDxXtyVuD974xP-445EJij",
+    "endpoint": "https://fcm.googleapis.com/fcm/send/ccNwuhv6mw8:APA91bHUOQp8PHZPCtrAhnHU7FOHsZJPJW_6UAL5pGOFC7oToww0Ls9JMlGdPXweeNKlgtsVmtWj9kXljSfohddowzCCJZZPc3EXihqz_UC9RAE_ympzfy5OFmBy2DMWGPkOoXs0Gepv",
     "keys": {
-        "p256dh": "BHhrlRbgbYYR+wXJ5E8/y1SZ+Kyphjp6/xFQ6e1+tTMo/91BT18BRUAKRpbAT1PZkwXQb5QwAYchDAFKkjQTK1g=", 
-        "auth": "oTH33p80Pkh1uOM0rcJong=="
+        "p256dh": "BLsz17i9TynDko+gx3oxxiHN85OY0iAr/G7povhj6/0NpoMVaWdGahKbfNaB1pIHxtNQRPeV8tBR2A4qPEa+eZY=", 
+        "auth": "NPzSfjgiG6hvRlPvBvBBhg=="
     }
 };
 var payload = 'Here is a payload!';
