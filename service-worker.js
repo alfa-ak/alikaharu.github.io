@@ -6,6 +6,7 @@ else
   console.log(`Workbox gagal dimuat`);
 
   workbox.precaching.precacheAndRoute([
+    { url: '/', revision: '1' },
     { url: '/index.html', revision: '1' },
     { url: '/pages/navigation/nav.html', revision: '1' },
     { url: '/css/materialize.min.css', revision: '1' },
@@ -21,6 +22,16 @@ else
     { url : '/js/database/idb.js', revision: '1'},
     { url : '/js/template/materialize.min.js', revision: '1'},
     { url : '/js/template/nav.js', revision: '1'},
+    { url : '/pages/menu/about.html', revision: '1'},
+    { url : '/pages/menu/item.html', revision: '1'},
+    { url : '/pages/menu/league.html', revision: '1'},
+    { url : '/pages/menu/squad.html', revision: '1'},  
+    { url : '/pages/detail/savedleague.html', revision: '1'},
+    { url : '/pages/detail/savedsquad.html', revision: '1'},
+    { url : '/pages/detail/savedplayer.html', revision: '1'},  
+    { url : '/images/icon.png', revision: '1'}, 
+    { url : '/images/pwa192.png', revision: '1'},
+    { url : '/images/pwa512.png', revision: '1'}, 
 ]);
 
 workbox.routing.registerRoute(
@@ -30,92 +41,41 @@ workbox.routing.registerRoute(
     })
 );
 
-const CACHE_NAME = "firstpwa";
-var urlsToCache = [
-  "/",
-  "/manifest.json",
-  "/pages/navigation/nav.html",
-  "/index.html",  
-  "/pages/menu/about.html",
-  "/pages/menu/item.html",
-  "/pages/menu/league.html",
-  "/pages/menu/squad.html",  
-  "/pages/detail/savedleague.html",
-  "/pages/detail/savedsquad.html",  
-  "/pages/detail/savedplayer.html",  
-  "/css/materialize.min.css",
-  "/js/api/apikey.js",  
-  "/js/api/apisquad.js",
-  "/js/api/apileague.js",
-  "/js/database/dbpwa.js",
-  "/js/database/dbleague.js",
-  "/js/database/dbsquad.js",  
-  "/js/database/idb.js",
-  "/js/template/materialize.min.js",
-  "/js/template/nav.js"
-];
- 
-self.addEventListener("install", function(event) {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(function(cache) {
-      return cache.addAll(urlsToCache);
-    })
-  );
-});
+workbox.routing.registerRoute(
+  /\.(?:png|gif|jpg|jpeg|svg)$/,
+  workbox.strategies.cacheFirst({
+      cacheName: 'images',
+      plugins: [
+          new workbox.expiration.Plugin({
+              maxEntries: 60,
+              maxAgeSeconds: 30 * 24 * 60 * 60, // 30 hari
+          }),
+      ],
+  }),
+);
 
-self.addEventListener("fetch", function(event) {
-  var base_url = "https://api.football-data.org/v2/";
+workbox.routing.registerRoute(
+  new RegExp('https://api.football-data.org/v2/'),
+  workbox.strategies.staleWhileRevalidate()
+)
 
-  if (event.request.url.indexOf(base_url) > -1) {
-    event.respondWith(
-      caches.open(CACHE_NAME).then(function(cache) {
-        return fetch(event.request).then(function(response) {
-          cache.put(event.request.url, response.clone());
-          return response;
-        })
-      })
-    );
-  } else {
-    event.respondWith(
-      caches.match(event.request, { ignoreSearch: true }).then(function(response) {
-        return response || fetch (event.request);
-      })
-    )
-  }
-});
-
-self.addEventListener("activate", function(event) {
-  event.waitUntil(
-    caches.keys().then(function(cacheNames) {
-      return Promise.all(
-        cacheNames.map(function(cacheName) {
-          if (cacheName != CACHE_NAME) {
-            console.log("ServiceWorker: cache " + cacheName + " dihapus");
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
-  );
-});
-
-self.addEventListener('push', function(event) {
+self.addEventListener('push', function (event) {
   var body;
   if (event.data) {
-    body = event.data.text();
+      body = event.data.text();
   } else {
-    body = 'Push message no payload';
+      body = 'Push message no payload';
   }
   var options = {
-    body: body,
-    icon: '../images/icon.png',
-    vibrate: [100, 50, 100],
-    data: {
-      dateOfArrival: Date.now(),
-      primaryKey: 1
-    }
+      body: body,
+      icon: 'images/icon.png',
+      vibrate: [100, 50, 100],
+      data: {
+          dateOfArrival: Date.now(),
+          primaryKey: 1
+      }
   };
   event.waitUntil(
-    self.registration.showNotification('Push Notification', options)
+      self.registration.showNotification('Push Notification', options)
   );
 });
